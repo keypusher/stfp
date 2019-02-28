@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">		
+	    <meta name="description" content="Generate Ship Builds For Star Traders: Frontiers">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	    <link href="css/style.css" rel="stylesheet">	
+	    <title>STF Planner</title>
+	</head>
+	
+	<body>
+		
+   	 	<div class="page-header container-fluid">
+			<h1>Star Traders: Frontiers - Planner</h1>
+			<p class="pull-right label label-info"> Last Updated: 2019-02-27 19:37:36 UTC</p>
+   		</div>	
+		<hr/>
+
+		<div class="container-fluid">
+		<form>
+		  <div class="row">
+			  
+		    <div class="col-md-3">
+				<div class="input-group">
+			  		<select class="custom-select w-100 my-1" id="shipSelect">
+			    		<option selected>Choose Ship...</option>
+						{% for ship in data.ships %}
+			    	  		<option value="{{ ship.get('name') }}">{{ ship.get('name') }}</option>
+				  	  	{% endfor %}	
+			  	  	</select>
+		    	</div>
+			</div>
+						
+		    <div class="col">
+			      <button type="submit" class="btn btn-outline-primary my-1">Load</button>
+			      <button type="submit" class="btn btn-outline-danger my-1">Reset</button>
+			      <button type="submit" class="btn btn-outline-success my-1">Share</button>
+		    </div>
+			
+		  </div>
+		</form>
+	    </div>
+		<hr/>
+
+		<div class="container-fluid">
+
+			<div class="row">
+				
+				<div class="col-md-3">
+					<div class="col text-center"><label class="p-0">Statistics</label></div><hr/>
+										
+					<ul class="list-group">
+						
+						<li class="list-group-item">
+							Ship: {{build.name}} <br/>
+							Mass: {{build.mass_current}} / {{build.mass_max}} <br/>
+						</li>
+
+						<li class="list-group-item">	
+							Officers: {{build.officers}} / {{build.officers_max}}<br/>
+							Crew: {{build.crew}} / {{build.crew_max}}<br/>
+						</li>
+
+						<li class="list-group-item">
+							Hull: {{build.hull}}<br/> 
+							Armor: {{build.armor}}<br/>
+							Shield: {{build.shield}}<br/>
+							Speed: {{build.speed}}<br/>
+							Agility: {{build.agility}}<br/>
+						</li>
+
+						<li class="list-group-item">	
+							Fuel: {{build.fuel}}<br/>
+							Cargo: {{build.cargo}}<br/>
+						</li>
+
+						<li class="list-group-item">			
+							Large Slots: {{build.num_slots['large']}}<br/>
+							Medium Slots: {{build.num_slots['medium']}}<br/>
+							Small Slots: {{build.num_slots['small']}}<br/>
+						</li>
+
+						<li class="list-group-item">
+							Jump Cost: {{build.jump_cost}}<br/>
+							Combat Cost: {{build.combat_cost}}<br/>
+							Move Cost: {{build.move_cost}}<br/>
+						</li>
+
+						<li class="list-group-item">
+							Pilot: {{build.pilot}}<br/>
+							Navigation: {{build.nav}}<br/>
+							Ship Ops: {{build.ops}}<br/>
+							Electronics: {{build.electronics}}<br/>
+							Gunnery: {{build.gunnery}}<br/>
+						</li>
+						
+						<li class="list-group-item">
+							Base Price: ${{build.ship_cost}}<br/>
+							Upgrades: ${{build.upgrade_cost}}<br/> 						
+							Total: ${{build.total_cost}}<br/> 						
+						</li>
+						
+						
+					</ul>
+				</div>
+				
+				<div class="col-md">
+					<div class="col text-center"><label class="p-0">Available Components</label></div><hr/>
+					
+			      	{% for component_size in data.components %}
+						{% for component_type, components in data.components[component_size].items() %}
+							<label class="btn btn-outline-primary py-1 disabled">{{component_size}}</label>
+							<label class="btn btn-outline-primary py-1 disabled">{{component_type}}</label>
+							<div class="list-group">
+							{% for component in components %}
+								<a href="#" class="list-group-item list-group-item-action py-1 list-group-item">{{component}}</a>
+						  	{% endfor %}
+							</div>
+						 	<hr/>
+				      	 {% endfor %}
+			      	 {% endfor %}					
+				</div>		
+				<div class="col-md">
+					<div class="col text-center"><label class="p-0">Current Loadout</label></div><hr/>
+					
+  			      	{% for slot_size in data.slot_sizes %}
+						<div class="list-group">
+						<label class="btn btn-outline-primary py-1 disabled">{{slot_size}} slots: {{build.num_slots[slot_size]}}</label>
+						{% for component in build.slots.get(slot_size) %}
+							{%- if loop.index > build.num_slots.get(slot_size) -%}
+								<a href="#" class="list-group-item list-group-item-action py-1 list-group-item-danger">{{component}}</a>
+							{%- else -%}
+								<a href="#" class="list-group-item list-group-item-action py-1 list-group-item-success">{{component}}</a>
+							{%- endif -%}
+							{%- if loop.last -%}
+								{% for i in range(0, (build.num_slots.get(slot_size) - loop.index)) %}
+		   					  		<a href="#" class="list-group-item list-group-item-action list-group-item-warning py-1">[Empty]</a>
+								{% endfor %} 
+							{%- endif -%}	
+					  	{% endfor %}
+						</div>
+						<hr/>
+  			      	{% endfor %}
+				</div>				
+				
+			</div>	
+		</div>
+				
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="js/scripts.js"></script>
+  </body>
+</html>

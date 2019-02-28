@@ -1,0 +1,38 @@
+
+list of ships
+	ship.name
+
+list of component types
+list of slot sizes
+	
+	
+build
+	ship_name
+	mass_current
+	mass_max
+	ship_cost
+	upgrade_cost
+	
+	hull
+	armor
+	shield
+	speed
+	agility
+	
+	fuel
+	cargo
+	officers_current / officers_max
+	crew_current / crew_max
+	
+	jump_cost
+	move_cost
+	combat_cost
+	
+	pilot
+	nav
+	ops
+	electronics
+	gunnery
+	
+	slot_maxes {'small': 5, ...}
+	slots: {'small': [engine, shield, ...], ....}
